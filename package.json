@@ -1,0 +1,16 @@
+{
+    "name": "NuxtBnB",
+    "scripts": {
+        "dev": "nuxt",
+        "build": "nuxt build",
+        "generate": "nuxt generate",
+        "start": "nuxt start"
+    },
+    "dependencies": {
+        "babel": "^6.23.0",
+        "nuxt": "^2.14.7"
+    },
+    "devDependencies": {
+        "@babel/preset-env": "^7.20.2"
+    }
+}
