@@ -13,8 +13,6 @@
 </template>
 
 <script>
-import homes from "~/data/homes";
-
 export default {
   head() {
     return {
@@ -28,9 +26,10 @@ export default {
       ],
     };
   },
-  data() {
+  async asyncData({ params, $dataApi }) {
+    const response = await $dataApi.getHome(params.id);
     return {
-      homes: homes.slice(0, 3),
+      home: response.json,
     };
   },
 };

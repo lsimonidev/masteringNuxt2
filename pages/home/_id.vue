@@ -31,22 +31,24 @@
   </div>
 </template>
 <script>
-import homes from "~/data/homes";
-
 export default {
   head() {
     return {
       title: this.home.title,
     };
   },
-  data() {
+  async asyncData({ params, $dataApi, error }) {
+    const response = await $dataApi.getHome(params.id);
+    if (!response.ok)
+      return error({
+        statusCode: response.status,
+        message: response.statusText,
+      });
     return {
-      home: {},
+      home: response.json,
     };
   },
-  created() {
-    this.home = homes.find((home) => home.objectID == this.$route.params.id);
-  },
+
   mounted() {
     this.$maps.showMap(
       this.$refs.map,
