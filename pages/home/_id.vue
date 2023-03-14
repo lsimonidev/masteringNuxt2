@@ -28,6 +28,12 @@
     </p>
     <p>{{ home.description }}</p>
     <div style="height: 800px; width: 800px" ref="map"></div>
+    <div v-for="review in reviews" :key="review.ObjectID">
+      <img :src="review.reviewer.image" alt="" /><br />
+      {{ review.reviewer.name }} <br />
+      {{ formatDate(review.date) }} <br />
+      <short-text :text="review.comment" target="150"></short-text>
+    </div>
   </div>
 </template>
 <script>
@@ -38,17 +44,32 @@ export default {
     };
   },
   async asyncData({ params, $dataApi, error }) {
-    const response = await $dataApi.getHome(params.id);
-    if (!response.ok)
+    const homeResponse = await $dataApi.getHome(params.id);
+    if (!homeResponse.ok)
       return error({
-        statusCode: response.status,
-        message: response.statusText,
+        statusCode: homeResponse.status,
+        message: homeResponse.statusText,
+      });
+    const reviewResponse = await $dataApi.getReviewsByHomeId(params.id);
+    if (!reviewResponse.ok)
+      return error({
+        statusCode: reviewResponse.status,
+        message: reviewResponse.statusText,
       });
     return {
-      home: response.json,
+      home: homeResponse.json,
+      reviews: reviewResponse.json.hits,
     };
   },
-
+  methods: {
+    formatDate(dateStr) {
+      const date = new Date(dateStr);
+      return date.toLocaleDateString(undefined, {
+        month: "long",
+        year: "numeric",
+      });
+    },
+  },
   mounted() {
     this.$maps.showMap(
       this.$refs.map,
